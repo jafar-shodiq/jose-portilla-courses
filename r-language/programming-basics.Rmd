@@ -1,0 +1,34 @@
+#####
+**Logical Operators**
+
+```{r}
+x <- 10
+x < 20
+```
+```{r}
+x > 5
+```
+```{r}
+(x < 20) & (x > 5)
+```
+```{r}
+(x < 20) | (x > 5)
+```
+```{r}
+x != 10
+```
+#####
+**Conditional statements**
+
+```{r}
+temp <- 45
+
+if (temp > 80){
+  print('Hot')
+} else if(temp <= 80 & temp >= 40){
+  print('Medium')
+} else{
+  print('Cool')
+}
+```
+
