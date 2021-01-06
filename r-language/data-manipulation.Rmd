@@ -1,0 +1,116 @@
+#####
+**Dplyr**
+
+```{r}
+#install.packages('dplyr')
+```
+```{r}
+#install.packages('nycflights13')
+```
+```{r}
+library(dplyr)
+library(nycflights13)
+```
+```{r}
+head(flights)
+```
+```{r}
+summary(flights)
+```
+```{r}
+str(flights)
+```
+```{r}
+head(filter(flights, month==11, day==3, carrier=='AA'))
+```
+```{r}
+head(flights[(flights$month == 11) & (flights$day == 3) & (flights$carrier == 'AA'), ])
+```
+```{r}
+slice(flights, 1:10)
+```
+```{r}
+head(arrange(flights, year, month, day, arr_time))
+```
+```{r}
+head(select(flights, carrier))
+```
+```{r}
+head(select(flights, carrier, arr_time, day))
+```
+```{r}
+head(rename(flights, year_new=year))
+```
+```{r}
+distinct(select(flights, carrier))
+```
+```{r}
+head(mutate(flights, new_col=arr_delay - dep_delay))
+```
+```{r}
+head(transmute(flights, new_col=arr_delay - dep_delay))
+```
+```{r}
+summarise(flights, avg_air_time=mean(air_time, na.rm=TRUE))
+```
+```{r}
+sample_n(flights, 10)
+```
+```{r}
+head(sample_frac(flights, 0.1))
+```
+#####
+**Pipe operator**
+
+```{r}
+library(dplyr)
+```
+```{r}
+df <- mtcars
+head(df)
+```
+```{r}
+result <- arrange(sample_n(filter(df, mpg > 20), size=5), desc(mpg))
+result
+```
+```{r}
+a <- filter(df, mpg > 20)
+b <- sample_n(a, size=5)
+result <- arrange(b, desc(mpg))
+result
+```
+```{r}
+# pipe
+result <- df %>% filter(mpg > 20) %>% sample_n(size=5) %>% arrange(desc(mpg))
+result
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
