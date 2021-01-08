@@ -1,0 +1,102 @@
+
+#####
+**EDA and feature engineering**
+
+```{r}
+df <- read.csv('../datasets/bikeshare.csv')
+head(df)
+```
+```{r}
+str(df)
+```
+```{r}
+summary(df)
+```
+
+#####
+Dealing with datetime
+
+```{r}
+class(df$datetime)
+```
+
+```{r}
+df$year <- as.integer(format(as.Date(df$datetime, format='%Y-%m-%d'), '%Y'))
+                      
+df$month <- as.integer(format(as.Date(df$datetime, format='%Y-%m-%d'), '%m'))
+                       
+df$day <- as.integer(format(as.Date(df$datetime, format='%Y-%m-%d'), '%d'))
+                     
+df$weekdays <- weekdays(as.Date(df$datetime))
+
+df$hour <- as.integer(format(strptime(df$datetime, format='%Y-%m-%d %H:%M:%S'), '%H'))
+
+str(df)
+```
+
+#####
+Visualization
+
+```{r}
+library(ggplot2)
+library(ggthemes)
+library(dplyr)
+library(corrgram)
+library(corrplot)
+
+num.cols <- sapply(df, is.numeric)
+cor.data <- cor(df[, num.cols])
+cor.data
+```
+```{r}
+corrplot(cor.data, method='color')
+```
+```{r}
+ggplot(df, aes(x=temp, y=count)) + geom_point(aes(color=temp), alpha=0.2)
+```
+```{r}
+ggplot(df, aes(x=month, y=count)) + geom_point(aes(color=season), alpha=0.2)
+```
+
+#####
+Factorizing
+
+```{r}
+to.factor <- c('season,holiday,workingday,weather,year,month,day,weekdays,hour')
+to.factor <- unlist(strsplit(to.factor, ','))
+
+for(i in to.factor){
+  df[[i]] <- as.factor(df[[i]])
+}
+str(df)
+```
+```{r}
+drop <- c('datetime')
+df <- df[, !(names(df) %in% drop)]
+str(df)
+```
+```{r}
+any(is.na(df))
+```
+
+#####
+**Split and build the model**
+
+```{r}
+library(caTools)
+```
+```{r}
+set.seed(42)
+sample <- sample.split(df$count, SplitRatio=0.8)
+```
+```{r}
+train <- subset(df, sample == TRUE)
+test <- subset(df, sample == FALSE)
+print(paste(count(train), count(test)))
+```
+```{r}
+model <- lm(count ~ ., data=train)
+```
+```{r}
+summary(model)
+```
