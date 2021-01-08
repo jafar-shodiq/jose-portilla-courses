@@ -100,3 +100,27 @@ model <- lm(count ~ ., data=train)
 ```{r}
 summary(model)
 ```
+
+#####
+**Evaluate**
+```{r}
+predictions <- predict(model, test)
+```
+```{r}
+results <- cbind(predictions, test$count)
+colnames(results) <- c('predicted', 'actual')
+results <- as.data.frame(results)
+head(results)
+```
+```{r}
+sse <- sum((results$predicted - results$actual)^2)
+sse
+```
+```{r}
+sst <- sum((mean(df$count) - results$actual)^2)
+sst
+```
+```{r}
+r2 <- 1 - (sse / sst)
+r2
+```
